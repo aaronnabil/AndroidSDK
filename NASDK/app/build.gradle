@@ -1,0 +1,31 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 18
+    buildToolsVersion "23.0.2"
+
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 15
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+}
+
+task deleteOldJar(type: Delete){
+    delete 'release\\NNASDK_1.01.0005.jar'
+}
+
+task exportJar(type: Copy){
+    from('build\\intermediates\\bundles\\release')
+    into('release\\')
+    include('classes.jar')
+    rename('classes.jar','NASDK_1.01.0005.jar')
+}
+
+exportJar.dependsOn(deleteOldJar, build)
